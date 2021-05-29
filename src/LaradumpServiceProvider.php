@@ -2,7 +2,6 @@
 
 namespace Thejenos\Laradump;
 
-use GuzzleHttp\Psr7\Query;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Thejenos\Laradump\Commands\LaradumpCommand;
@@ -26,12 +25,14 @@ class LaradumpServiceProvider extends PackageServiceProvider
         $this->app->bind(Laradump::class, function () {
             $laradump = new Laradump();
             $laradump->checkActive();
+
             return $laradump;
         });
 
         $this->app->bind(QueryObserver::class, function () {
             $observer = new QueryObserver();
             $observer->register();
+
             return $observer;
         });
     }

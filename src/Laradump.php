@@ -2,18 +2,13 @@
 
 namespace Thejenos\Laradump;
 
-use GuzzleHttp\Psr7\Query;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use ReflectionClass;
 use Spatie\Backtrace\Backtrace;
 use Symfony\Component\VarDumper\Caster\ReflectionCaster;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
-use Symfony\Component\VarDumper\VarDumper;
 use Thejenos\Laradump\Observers\QueryObserver;
 
 class Laradump
@@ -22,7 +17,7 @@ class Laradump
 
     public function checkActive()
     {
-        $this->active = config('app.debug') != false && !App::environment('production') && config('laradump.enable');
+        $this->active = config('app.debug') != false && ! App::environment('production') && config('laradump.enable');
     }
 
     public function sendRequest($data)
@@ -33,8 +28,10 @@ class Laradump
         }
     }
 
-    private function createTrace() {
+    private function createTrace()
+    {
         $backtrace = Backtrace::create()->frames();
+
         return [
             'class' => $backtrace[2]->class,
             'file_name' => basename($backtrace[2]->file),
@@ -43,24 +40,32 @@ class Laradump
         ];
     }
 
-    private function customDumper($data) {
+    private function customDumper($data)
+    {
         $cloner = new VarCloner();
         $cloner->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
         $dumper = new HtmlDumper();
         $dumper->setTheme('light');
-        return $dumper->dump($cloner->cloneVar($data),true);
+
+        return $dumper->dump($cloner->cloneVar($data), true);
     }
 
-    public function showQueries() {
-        if (!$this->active) return;
+    public function showQueries()
+    {
+        if (! $this->active) {
+            return;
+        }
 
         $called_by = $this->createTrace();
 
         app(QueryObserver::class)->enable($called_by);
     }
 
-    public function stopShowingQueries() {
-        if (!$this->active) return;
+    public function stopShowingQueries()
+    {
+        if (! $this->active) {
+            return;
+        }
 
         $called_by = $this->createTrace();
 
@@ -69,7 +74,9 @@ class Laradump
 
     public function model(Model $model)
     {
-        if (!$this->active) return;
+        if (! $this->active) {
+            return;
+        }
 
         $called_by = $this->createTrace();
 
@@ -80,8 +87,8 @@ class Laradump
                 'model' => $model,
                 'dump' => $this->customDumper($model->toArray()),
                 'relation' => $this->customDumper($model->getRelations()),
-                'call' => $called_by
-            ])->render()
+                'call' => $called_by,
+            ])->render(),
         ]);
     }
 
@@ -91,11 +98,11 @@ class Laradump
 
         $this->sendRequest([
             'view' => view('laradump::dump', [
-                'dumps' => collect($args)->map(function($dumpValue) {
-                       return $this->customDumper($dumpValue);
+                'dumps' => collect($args)->map(function ($dumpValue) {
+                    return $this->customDumper($dumpValue);
                 }),
-                'call' => $called_by
-            ])->render()
+                'call' => $called_by,
+            ])->render(),
         ]);
     }
 
@@ -112,8 +119,8 @@ class Laradump
                 'cc' => $this->convertToPersons($mailable->cc),
                 'bcc' => $this->convertToPersons($mailable->bcc),
                 'html' => $mailable->render(),
-                'call' => $called_by
-            ])->render()
+                'call' => $called_by,
+            ])->render(),
         ]);
     }
 

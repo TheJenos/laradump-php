@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Thejenos\Laradump\Laradump;
 
 if (! function_exists('laradump')) {

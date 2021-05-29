@@ -17,7 +17,7 @@ class QueryObserver
                 return;
             }
 
-            $sqlQuery = str_replace(array('?'), array('\'%s\''), $query->sql);
+            $sqlQuery = str_replace(['?'], ['\'%s\''], $query->sql);
             $sqlQuery = vsprintf($sqlQuery, $query->bindings);
 
             laradump()->sendRequest([
@@ -25,8 +25,8 @@ class QueryObserver
                     'query' => $sqlQuery,
                     'time' => $query->time,
                     'connectionName' => $query->connectionName,
-                    'call' => $this->called_by
-                ])->render()
+                    'call' => $this->called_by,
+                ])->render(),
             ]);
         });
     }
