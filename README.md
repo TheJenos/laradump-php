@@ -15,10 +15,11 @@ You can install the package via composer:
 composer require thejenos/laradump
 ```
 
-You need to install vscode extension to see the dumps
+You need to install [vscode extension](https://marketplace.visualstudio.com/items?itemName=laradump.laradump) to see the dumps
 
 ```bash
-composer require thejenos/laradump
+## Launch VS Code Quick Open (Ctrl+P), paste the following command, and press enter.
+ext install laradump.laradump
 ```
 
 ## Usage
