@@ -1,4 +1,4 @@
-# laradump is a free alternative of spatie ray
+# Laradump (Free alternative of Spatie ray)
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/thejenos/laradump.svg?style=flat-square)](https://packagist.org/packages/thejenos/laradump)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/thejenos/laradump/run-tests?label=tests)](https://github.com/thejenos/laradump/actions?query=workflow%3Arun-tests+branch%3Amain)
@@ -6,24 +6,6 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/thejenos/laradump.svg?style=flat-square)](https://packagist.org/packages/thejenos/laradump)
 
 ---
-This repo can be used as to scaffold a Laravel package. Follow these steps to get started:
-
-1. Press the "Use template" button at the top of this repo to create a new repo with the contents of this laradump
-2. Run "./configure-laradump.sh" to run a script that will replace all placeholders throughout all the files
-3. Remove this block of text.
-4. Have fun creating your package.
-5. If you need help creating a package, consider picking up our <a href="https://laravelpackage.training">Laravel Package Training</a> video course.
----
-
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
-
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laradump.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laradump)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
 
 ## Installation
 
@@ -33,36 +15,34 @@ You can install the package via composer:
 composer require thejenos/laradump
 ```
 
-You can publish and run the migrations with:
+You need to install vscode extension to see the dumps
 
 ```bash
-php artisan vendor:publish --provider="Thejenos\Laradump\LaradumpServiceProvider" --tag="laradump-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
-```bash
-php artisan vendor:publish --provider="Thejenos\Laradump\LaradumpServiceProvider" --tag="laradump-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
+composer require thejenos/laradump
 ```
 
 ## Usage
 
 ```php
-$laradump = new Thejenos\Laradump();
-echo $laradump->echoPhrase('Hello, Spatie!');
-```
+// Dump a variable
+laradump()->dump("test");
 
-## Testing
+// Dump multiple variables
+laradump()->dump("test", [1,2,3], User::find(1));
 
-```bash
-composer test
+// Dump models
+laradump()->model(User::find(1));
+
+// Start dump queries
+laradump()->showQueries();
+
+// Stop dump queries
+laradump()->stopShowingQueries();
+
+// Dump mails
+laradump()->mail(new TestMail());
+
+//Many more up to come
 ```
 
 ## Changelog
@@ -80,7 +60,6 @@ Please review [our security policy](../../security/policy) on how to report secu
 ## Credits
 
 - [Thanura Nadun](https://github.com/TheJenos)
-- [All Contributors](../../contributors)
 
 ## License
 
