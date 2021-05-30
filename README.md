@@ -1,8 +1,8 @@
 # Laradump (Free alternative of Spatie ray)
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/thejenos/laradump.svg?style=flat-square)](https://packagist.org/packages/thejenos/laradump)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/thejenos/laradump/run-tests?label=tests)](https://github.com/thejenos/laradump/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/thejenos/laradump/Check%20&%20fix%20styling?label=code%20style)](https://github.com/thejenos/laradump/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/thejenos/laradump-php/run-tests?label=tests)](https://github.com/thejenos/laradump-php/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/thejenos/laradump-php/Check%20&%20fix%20styling?label=code%20style)](https://github.com/thejenos/laradump-php/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/thejenos/laradump.svg?style=flat-square)](https://packagist.org/packages/thejenos/laradump)
 
 ---
