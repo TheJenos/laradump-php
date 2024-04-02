@@ -1,0 +1,12 @@
+{
+    "bumpFiles": [
+        {
+            "filename": "composer.json",
+            "type": "json"
+        },
+        {
+            "filename": "package.json",
+            "type": "json"
+        }
+    ]
+}
