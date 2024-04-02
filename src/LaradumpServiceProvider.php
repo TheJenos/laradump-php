@@ -32,10 +32,13 @@ class LaradumpServiceProvider extends PackageServiceProvider
 
         $this->app->bind(Laradump::class, function () {
             $laradump = new Laradump();
+
             return $laradump;
         });
 
-        if (config('app.debug') == false || App::environment('production')) return;
+        if (config('app.debug') == false || App::environment('production')) {
+            return;
+        }
 
         Blade::component('laradump-call-path', CallPath::class);
         Blade::component('laradump-badge', Badge::class);

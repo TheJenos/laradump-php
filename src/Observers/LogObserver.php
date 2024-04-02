@@ -6,7 +6,6 @@ use Illuminate\Log\Events\MessageLogged;
 use Illuminate\Support\Facades\Log;
 use Thejenos\Laradump\Helpers\StackTracer;
 use Thejenos\Laradump\Helpers\VarDump;
-use Thejenos\Laradump\Laradump;
 
 class LogObserver extends Observer
 {
@@ -16,7 +15,7 @@ class LogObserver extends Observer
     public function register(): void
     {
         Log::listen(function (MessageLogged $data) {
-            if (!$this->status) {
+            if (! $this->status) {
                 return;
             }
 
@@ -31,6 +30,7 @@ class LogObserver extends Observer
                         'call' => StackTracer::createTrace(),
                     ])->render(),
                 ]);
+
                 return;
             }
 

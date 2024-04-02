@@ -2,14 +2,13 @@
 
 namespace Thejenos\Laradump\Observers;
 
-use Illuminate\Support\Facades\Event;
 use Illuminate\Cache\Events\CacheHit;
 use Illuminate\Cache\Events\CacheMissed;
 use Illuminate\Cache\Events\KeyForgotten;
 use Illuminate\Cache\Events\KeyWritten;
+use Illuminate\Support\Facades\Event;
 use Thejenos\Laradump\Helpers\StackTracer;
 use Thejenos\Laradump\Helpers\VarDump;
-use Thejenos\Laradump\Laradump;
 
 class CacheObserver extends Observer
 {
@@ -31,7 +30,7 @@ class CacheObserver extends Observer
 
     public function onEvent($event)
     {
-        if (!$this->status) {
+        if (! $this->status) {
             return;
         }
 
@@ -39,7 +38,7 @@ class CacheObserver extends Observer
             'view' => view('laradump::log', [
                 'message' => class_basename($event) . " on `" . $event->key . "`",
                 'context' => VarDump::customDumper($event),
-                'call' => StackTracer::createTrace()
+                'call' => StackTracer::createTrace(),
             ])->render(),
         ]);
     }

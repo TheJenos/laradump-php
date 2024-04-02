@@ -15,7 +15,7 @@ class QueryObserver extends Observer
     public function register(): void
     {
         DB::listen(function (QueryExecuted $query) {
-            if (!$this->status) {
+            if (! $this->status) {
                 return;
             }
 

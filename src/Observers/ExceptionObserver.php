@@ -20,8 +20,8 @@ class ExceptionObserver extends Observer
 
             $backTrace = Backtrace::createForThrowable($exception)->frames();
             $lastTrace = collect($backTrace)->filter(function ($trace) {
-                return !str_contains($trace->file, 'laradump')
-                    && !str_contains($trace->file, "laravel/framework");
+                return ! str_contains($trace->file, 'laradump')
+                    && ! str_contains($trace->file, "laravel/framework");
             })->first();
 
             laradump()->sendRequest([

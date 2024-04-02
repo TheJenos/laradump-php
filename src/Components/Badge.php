@@ -16,7 +16,7 @@ class Badge extends Component
     public function render()
     {
         return view('laradump::components.badge', [
-            'call' => $this->badge
+            'call' => $this->badge,
         ]);
     }
 }

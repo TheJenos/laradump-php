@@ -16,7 +16,7 @@ class CallPath extends Component
     public function render()
     {
         return view('laradump::components.call_path', [
-            'call' => $this->calledBy
+            'call' => $this->calledBy,
         ]);
     }
 }

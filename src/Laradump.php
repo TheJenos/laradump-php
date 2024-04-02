@@ -2,11 +2,9 @@
 
 namespace Thejenos\Laradump;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
-use Spatie\Backtrace\Backtrace;
 use Thejenos\Laradump\Helpers\StackTracer;
 use Thejenos\Laradump\Helpers\VarDump;
 use Thejenos\Laradump\Traits\DumpCache;
@@ -16,20 +14,23 @@ use Thejenos\Laradump\Traits\DumpQueries;
 
 class Laradump
 {
-    use DumpMails, DumpQueries, DumpLogs, DumpCache;
+    use DumpMails;
+    use DumpQueries;
+    use DumpLogs;
+    use DumpCache;
 
     private $active;
     private $url;
 
     public function __construct()
     {
-        $this->active  = !(config('app.debug') == false || App::environment('production') || !config('laradump.enable'));
+        $this->active = ! (config('app.debug') == false || App::environment('production') || ! config('laradump.enable'));
         $this->url = config('laradump.url') . ':' . config('laradump.port') . '/';
     }
 
     public function __call($soapMethod, $params)
     {
-        if (!$this->active) {
+        if (! $this->active) {
             return;
         }
 
@@ -38,14 +39,14 @@ class Laradump
 
     public function sendRequest($data, $id = null)
     {
-        if (!$id) {
+        if (! $id) {
             $id = uniqid();
         }
 
         $data = [
             'id' => $id,
             'style' => File::get(__DIR__ . '/../dist/main.css'),
-            ...$data
+            ...$data,
         ];
 
         try {
@@ -56,14 +57,14 @@ class Laradump
 
     private function updateRequest($data, $id = null)
     {
-        if (!$id) {
+        if (! $id) {
             $id = uniqid();
         }
 
         $data = [
             'id' => $id,
             'style' => File::get(__DIR__ . '/../dist/main.css'),
-            ...$data
+            ...$data,
         ];
 
         try {

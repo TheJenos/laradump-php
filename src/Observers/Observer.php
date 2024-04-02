@@ -2,8 +2,6 @@
 
 namespace Thejenos\Laradump\Observers;
 
-use Illuminate\Support\Facades\Event;
-
 abstract class Observer
 {
     public function __construct()
@@ -11,5 +9,5 @@ abstract class Observer
         $this->register();
     }
 
-    public abstract function register();
+    abstract public function register();
 }
