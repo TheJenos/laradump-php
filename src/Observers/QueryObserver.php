@@ -4,8 +4,10 @@ namespace Thejenos\Laradump\Observers;
 
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Facades\DB;
+use Thejenos\Laradump\Helpers\SqlFormatter;
+use Thejenos\Laradump\Helpers\StackTracer;
 
-class QueryObserver
+class QueryObserver extends Observer
 {
     private $status = false;
     private $called_by;
@@ -13,7 +15,7 @@ class QueryObserver
     public function register(): void
     {
         DB::listen(function (QueryExecuted $query) {
-            if (! $this->status) {
+            if (!$this->status) {
                 return;
             }
 
@@ -22,10 +24,10 @@ class QueryObserver
 
             laradump()->sendRequest([
                 'view' => view('laradump::query', [
-                    'query' => $sqlQuery,
+                    'query' => SqlFormatter::format($sqlQuery),
                     'time' => $query->time,
                     'connectionName' => $query->connectionName,
-                    'call' => $this->called_by,
+                    'call' => StackTracer::createTrace(),
                 ])->render(),
             ]);
         });

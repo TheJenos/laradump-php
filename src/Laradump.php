@@ -4,135 +4,116 @@ namespace Thejenos\Laradump;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Spatie\Backtrace\Backtrace;
-use Symfony\Component\VarDumper\Caster\ReflectionCaster;
-use Symfony\Component\VarDumper\Cloner\VarCloner;
-use Symfony\Component\VarDumper\Dumper\HtmlDumper;
-use Thejenos\Laradump\Observers\QueryObserver;
+use Thejenos\Laradump\Helpers\StackTracer;
+use Thejenos\Laradump\Helpers\VarDump;
+use Thejenos\Laradump\Traits\DumpCache;
+use Thejenos\Laradump\Traits\DumpLogs;
+use Thejenos\Laradump\Traits\DumpMails;
+use Thejenos\Laradump\Traits\DumpQueries;
 
 class Laradump
 {
-    private $active = true;
+    use DumpMails, DumpQueries, DumpLogs, DumpCache;
 
-    public function checkActive()
+    private $active;
+    private $url;
+
+    public function __construct()
     {
-        $this->active = config('app.debug') != false && ! App::environment('production') && config('laradump.enable');
+        $this->active  = !(config('app.debug') == false || App::environment('production') || !config('laradump.enable'));
+        $this->url = config('laradump.url') . ':' . config('laradump.port') . '/';
     }
 
-    public function sendRequest($data)
+    public function __call($soapMethod, $params)
     {
+        if (!$this->active) {
+            return;
+        }
+
+        $this->{$soapMethod}($params);
+    }
+
+    public function sendRequest($data, $id = null)
+    {
+        if (!$id) {
+            $id = uniqid();
+        }
+
+        $data = [
+            'id' => $id,
+            'style' => File::get(__DIR__ . '/../dist/main.css'),
+            ...$data
+        ];
+
         try {
-            Http::post(config('laradump.url') . ':' . config('laradump.port') . '/', $data);
+            Http::post($this->url, $data);
         } catch (\Throwable $th) {
         }
     }
 
-    private function createTrace()
+    private function updateRequest($data, $id = null)
     {
-        $backtrace = Backtrace::create()->frames();
+        if (!$id) {
+            $id = uniqid();
+        }
 
-        return [
-            'class' => $backtrace[2]->class,
-            'file_name' => basename($backtrace[2]->file),
-            'file_path' => $backtrace[2]->file,
-            'line' => $backtrace[2]->lineNumber,
+        $data = [
+            'id' => $id,
+            'style' => File::get(__DIR__ . '/../dist/main.css'),
+            ...$data
         ];
-    }
 
-    private function customDumper($data)
-    {
-        $cloner = new VarCloner();
-        $cloner->addCasters(ReflectionCaster::UNSET_CLOSURE_FILE_INFO);
-        $dumper = new HtmlDumper();
-        $dumper->setTheme('light');
-
-        return $dumper->dump($cloner->cloneVar($data), true);
-    }
-
-    public function showQueries()
-    {
-        if (! $this->active) {
-            return;
+        try {
+            Http::put($this->url, $data);
+        } catch (\Throwable $th) {
         }
-
-        $called_by = $this->createTrace();
-
-        app(QueryObserver::class)->enable($called_by);
     }
 
-    public function stopShowingQueries()
+    private function clear()
     {
-        if (! $this->active) {
-            return;
+        try {
+            Http::delete($this->url);
+        } catch (\Throwable $th) {
         }
-
-        $called_by = $this->createTrace();
-
-        app(QueryObserver::class)->disable($called_by);
     }
 
-    public function model(Model $model)
+    public function model(...$models)
     {
-        if (! $this->active) {
-            return;
-        }
+        foreach ($models as $model) {
+            $called_by = StackTracer::createTrace();
 
-        $called_by = $this->createTrace();
-
-        $this->sendRequest([
-            'class_name' => get_class($model),
-            'model' => $model,
-            'view' => view('laradump::model', [
+            $this->sendRequest([
+                'class_name' => get_class($model),
                 'model' => $model,
-                'dump' => $this->customDumper($model->toArray()),
-                'relation' => $this->customDumper($model->getRelations()),
-                'call' => $called_by,
-            ])->render(),
-        ]);
+                'view' => view('laradump::model', [
+                    'model' => $model,
+                    'dump' => VarDump::customDumper($models->toArray()),
+                    'relation' => VarDump::customDumper($model->getRelations()),
+                    'call' => $called_by,
+                ])->render(),
+            ]);
+        }
     }
 
     public function dump(...$args)
     {
-        $called_by = $this->createTrace();
+        $called_by = StackTracer::createTrace();
 
         $this->sendRequest([
             'view' => view('laradump::dump', [
                 'dumps' => collect($args)->map(function ($dumpValue) {
-                    return $this->customDumper($dumpValue);
+                    return VarDump::customDumper($dumpValue);
                 }),
                 'call' => $called_by,
             ])->render(),
         ]);
     }
 
-    public function mail($mailable)
+    public function clearDumps()
     {
-        $called_by = $this->createTrace();
-
-        $this->sendRequest([
-            'view' => view('laradump::mail', [
-                'mailable_class' => get_class($mailable),
-                'from' => $this->convertToPersons($mailable->from),
-                'subject' => $mailable->subject,
-                'to' => $this->convertToPersons($mailable->to),
-                'cc' => $this->convertToPersons($mailable->cc),
-                'bcc' => $this->convertToPersons($mailable->bcc),
-                'html' => $mailable->render(),
-                'call' => $called_by,
-            ])->render(),
-        ]);
-    }
-
-    private function convertToPersons(array $persons): array
-    {
-        return collect($persons)
-            ->map(function (array $person) {
-                return [
-                    'email' => $person['address'],
-                    'name' => $person['name'] ?? '',
-                ];
-            })
-            ->toArray();
+        $this->clear();
     }
 }

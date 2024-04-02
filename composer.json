@@ -56,7 +56,7 @@
                 "Thejenos\\Laradump\\LaradumpServiceProvider"
             ],
             "aliases": {
-                "Laradump": "Thejenos\\Laradump\\LaradumpFacade"
+                "Laradump": "Thejenos\\Laradump\\Facades\\Laradump"
             }
         }
     },

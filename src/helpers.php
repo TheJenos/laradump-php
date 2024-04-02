@@ -2,14 +2,15 @@
 
 use Thejenos\Laradump\Laradump;
 
-if (! function_exists('laradump')) {
-    /**
-     * @param mixed ...$args
-     *
-     * @return
-     */
-    function laradump()
+if (!function_exists('laradump')) {
+    function laradump(...$args): Laradump
     {
-        return app(Laradump::class);
+        $laradump = app(Laradump::class);
+
+        if (!empty($args)) {
+            $laradump->dump(...$args);
+        }
+
+        return $laradump;
     }
 }

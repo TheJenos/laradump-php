@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+
+.card {
+    max-width: calc(100vw - 20px);
+    @apply my-2 bg-white py-5 rounded-md tracking-wide shadow-lg;
+    @apply dark:bg-gray-700;
+}
+
+.card_header {
+    @apply flex items-end;
+}
+
+.card_header_title {
+    @apply mt-2 text-base font-semibold inline-block text-black;
+    @apply dark:text-white;
+}
+
+.card_title {
+    @apply text-base font-semibold inline-block text-black;
+    @apply dark:text-white;
+}
+
+.card_time {
+    @apply ml-auto bg-gray-500 rounded-lg px-2 py-1 text-white text-sm;
+    @apply dark:bg-gray-500;
+}
+
+.card_query {
+    font-family: "Montserrat", sans-serif;
+    max-width: calc(100vw - 64px);
+    @apply text-gray-800 mt-2 p-2 bg-gray-200 rounded-lg overflow-x-auto;
+    @apply dark:bg-gray-800 dark:text-white;
+}
+
+.card_dump {
+    font-family: "Montserrat", sans-serif;
+    max-width: calc(100vw - 64px);
+    @apply text-gray-800 mt-2 p-2 bg-gray-200 rounded-lg text-sm overflow-x-auto;
+    @apply dark:bg-gray-800;
+}
+
+.card_mail {
+    max-width: calc(100vw - 64px);
+    @apply mt-2;
+}
+
+.card_footer {
+    @apply flex mt-2;
+}
+
+.card_code {
+    @apply ml-auto text-sm underline text-gray-400;
+    @apply dark:text-white;
+}
+
+.sf-dump-key {
+    @apply text-black !important;
+    @apply dark:text-white !important;
+}
+
+.sf-dump-public {
+    @apply dark:text-white !important;
+}
+
+.sf-dump-protected {
+    @apply dark:text-white !important;
+}
+
+@tailwind utilities;

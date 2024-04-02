@@ -2,14 +2,18 @@
 
 @section('content')
 <div class="card_header">
-  <h4 class="card_title">Query Execution</h4>
+  <h4 class="card_title">
+    {{$message}}
+    @isset($badge)
+    <x-laradump-badge :badge="$badge" />
+    @endisset
+  </h4>
   <span class="card_time">{{date('H:i:s')}}</span>
 </div>
 <div class="card_query">
-  {!! $query !!}
+  {!! $context !!}
 </div>
-<div class="card_footer flex justify-between">
-  <div><span>{{ $time }}μs on ({{ $connectionName }})</span></div>
+<div class="card_footer justify-end">
   <x-laradump-call-path :calledBy="$call" />
 </div>
 @endsection
