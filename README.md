@@ -26,6 +26,7 @@ ext install laradump.laradump
 
 ```php
 // Dump a variable
+laradump("test");
 laradump()->dump("test");
 
 // Dump multiple variables
@@ -33,22 +34,28 @@ laradump()->dump("test", [1,2,3], User::find(1));
 
 // Dump models
 laradump()->model(User::find(1));
+laradump()->model(User::find(1), User::find(2));
 
-// Start dump queries
+// Clear dump list
+laradump()->clearDumps();
+
+// Dump queries
 laradump()->showQueries();
-
-// Stop dump queries
 laradump()->stopShowingQueries();
+
+// Dump logs
+laradump()->showLogs();
+laradump()->stopShowingLogs();
+
+// Dump logs
+laradump()->showCache();
+laradump()->stopShowingCache();
 
 // Dump mails
 laradump()->mail(new TestMail());
 
 //Many more up to come
 ```
-
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
 ## Contributing
 
