@@ -11,8 +11,8 @@ class StackTracer
     {
         $backTrace = Backtrace::create()->frames();
         $lastTrace = collect($backTrace)->filter(function ($trace) {
-            return !str_contains($trace->file, 'laradump')
-                && !str_contains($trace->file, "laravel/framework");
+            return ! str_contains($trace->file, 'laradump')
+                && ! str_contains($trace->file, "laravel/framework");
         })->first();
 
         return [
@@ -27,8 +27,8 @@ class StackTracer
     {
         $backTrace = Backtrace::createForThrowable($tr)->frames();
         $lastTrace = collect($backTrace)->filter(function ($trace) {
-            return !str_contains($trace->file, 'laradump')
-                && !str_contains($trace->file, "laravel/framework");
+            return ! str_contains($trace->file, 'laradump')
+                && ! str_contains($trace->file, "laravel/framework");
         })->first();
 
         return [
