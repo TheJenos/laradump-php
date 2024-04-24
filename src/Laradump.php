@@ -39,17 +39,17 @@ class Laradump
 
     public function sendRequest($data, $id = null)
     {
-        if (! $id) {
-            $id = uniqid();
-        }
-
-        $data = [
-            'id' => $id,
-            'style' => File::get(__DIR__ . '/../dist/main.css'),
-            ...$data,
-        ];
-
         try {
+            if (! $id) {
+                $id = uniqid();
+            }
+
+            $data = [
+                'id' => $id,
+                'style' => File::get(__DIR__ . '/../dist/main.css'),
+                ...$data,
+            ];
+
             Http::post($this->url, $data);
         } catch (\Throwable $th) {
         }
@@ -57,17 +57,17 @@ class Laradump
 
     private function updateRequest($data, $id = null)
     {
-        if (! $id) {
-            $id = uniqid();
-        }
-
-        $data = [
-            'id' => $id,
-            'style' => File::get(__DIR__ . '/../dist/main.css'),
-            ...$data,
-        ];
-
         try {
+            if (! $id) {
+                $id = uniqid();
+            }
+
+            $data = [
+                'id' => $id,
+                'style' => File::get(__DIR__ . '/../dist/main.css'),
+                ...$data,
+            ];
+
             Http::put($this->url, $data);
         } catch (\Throwable $th) {
         }
