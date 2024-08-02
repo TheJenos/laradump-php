@@ -86,6 +86,7 @@ class Laradump
         foreach ($models as $model) {
             if (! $model instanceof \Illuminate\Database\Eloquent\Model) {
                 $this->dump($model);
+
                 continue;
             }
             
