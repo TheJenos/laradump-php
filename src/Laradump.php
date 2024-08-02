@@ -91,7 +91,7 @@ class Laradump
                 'model' => $model,
                 'view' => view('laradump::model', [
                     'model' => $model,
-                    'dump' => VarDump::customDumper($models->toArray()),
+                    'dump' => VarDump::customDumper($model->toArray()),
                     'relation' => VarDump::customDumper($model->getRelations()),
                     'call' => $called_by,
                 ])->render(),
