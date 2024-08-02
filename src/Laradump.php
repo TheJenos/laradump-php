@@ -84,6 +84,11 @@ class Laradump
     public function model(...$models)
     {
         foreach ($models as $model) {
+            if (! $model instanceof \Illuminate\Database\Eloquent\Model) {
+                $this->dump($model);
+                continue;
+            }
+            
             $called_by = StackTracer::createTrace();
 
             $this->sendRequest([
